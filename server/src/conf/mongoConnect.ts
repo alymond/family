@@ -15,6 +15,3 @@ export async function connect() {
     console.error('Error connecting to MongoDB:', error);
   }
 }
-
-
-
