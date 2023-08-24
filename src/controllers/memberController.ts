@@ -1,5 +1,6 @@
 import express from 'express'
 import { memberModel } from '../models/memberModel';
+import { familyModel } from '../models/familyModel';
 
 
 // show family
@@ -27,14 +28,23 @@ export const getOneMember = async(req: express.Request, res: express.Response) =
 
 export const createOneMember = async (req: express.Request, res: express.Response) => {
     try {
-        const { familyId, ...memberData } = req.body;  // Extract familyId separately
-        const member = await memberModel.create({ ...memberData, family: familyId });
-        res.status(201).json(member);
+        const { familyId, ...memberData } = req.body;
+
+        // Check if the family exists
+        const existingFamily = await familyModel.findById(familyId);
+        if (!existingFamily) {
+            return res.status(404).json({ message: "Family not found" });
+        }
+
+        // Create a new member and associate with the family
+        const newMember = await memberModel.create({ ...memberData, family: familyId });
+
+        res.status(201).json(newMember);
     } catch (error) {
-        console.log(error.message);
+        console.error(error.message);
         res.status(500).json({ message: error.message });
     }
-}
+};
 
 
 //Edit family
