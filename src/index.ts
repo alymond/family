@@ -13,7 +13,6 @@ app.use(express.json())
 const port = process.env.PORT || 8080;
 app.listen(port, () => {
   connect()
-
   console.log(`Server port ${port}`);
 });
 
